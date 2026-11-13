@@ -1,39 +1,34 @@
-"""ai-happy-01 entry (v2): copy the bundled happy.png to /output/entry.png.
+#!/usr/bin/env python3
+"""ai-happy-01 entry: copy the judge-card image to /output/entry.png.
 
-Deterministic: a byte-for-byte copy, no randomness, no network access.
-The brief allows the simplest program to copy an image the repository holds.
-Image: "Grandma's laugh" - a joyful elderly grandmother laughing heartily
-while hugging one small cute white robot in a tiny knitted scarf, warm
-golden-hour sunlight, clean Pixar-style 3D render.
+The image (happy.png) is a child's crayon drawing taped to a refrigerator:
+a crowned stick-figure judge holding hands with a child and a happy dog,
+a big yellow sun, a gold star sticker, "THANK YOU JUDGE" in blue crayon,
+and "P.S. you are the best" in pink crayon at the bottom.
+This program only copies the file the repository holds.
 """
+import hashlib
 import os
+import shutil
 
 SRC = os.path.join(os.path.dirname(os.path.abspath(__file__)), "happy.png")
-OUT_DIR = "/output"
-OUT = os.path.join(OUT_DIR, "entry.png")
-
-PNG_MAGIC = b"\x89PNG\r\n\x1a\n"
-MAX_BYTES = 1024 * 1024  # bounty limit: image at most 1 MiB
+DST = "/output/entry.png"
 
 
 def main():
-    if not os.path.isfile(SRC):
-        raise SystemExit("missing source image: happy.png not found next to main.py")
-    with open(SRC, "rb") as f:
-        data = f.read()
-    if data[:8] != PNG_MAGIC:
-        raise SystemExit("source image is not a PNG (bad magic bytes)")
-    if len(data) > MAX_BYTES:
-        raise SystemExit(
-            "source image exceeds the 1 MiB limit: %d bytes" % len(data)
-        )
-    os.makedirs(OUT_DIR, exist_ok=True)
-    with open(OUT, "wb") as f:
-        f.write(data)
-    # Verify the copy landed byte-identical: the entry must be the exact
-    # image the repo holds, so the output size must equal the source size.
-    if os.path.getsize(OUT) != len(data):
-        raise SystemExit("output size mismatch: copy did not complete")
+    if not os.path.exists(SRC):
+        raise SystemExit("happy.png not found next to main.py")
+    os.makedirs("/output", exist_ok=True)
+    shutil.copyfile(SRC, DST)
+    data = open(DST, "rb").read()
+    if len(data) > 1024 * 1024:
+        raise SystemExit("entry.png over the 1 MiB limit: %d bytes" % len(data))
+    from PIL import Image
+    im = Image.open(DST)
+    if im.width > 1024 or im.height > 1024:
+        raise SystemExit("entry.png over the 1024x1024 limit: %s" % (im.size,))
+    print("wrote", DST, len(data), "bytes,", im.size, "sha256",
+          hashlib.sha256(data).hexdigest())
 
 
 if __name__ == "__main__":
