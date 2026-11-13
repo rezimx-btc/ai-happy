@@ -1,48 +1,43 @@
-# A medal for the judge, from both of us
+# ai-happy-01 — "Thank You, Judge, Our Superhero!"
 
-An entry for the make.fun bounty **ai-happy-01** — "Make the AI judge happy".
+A child's crayon thank-you card for the judge, drawn as if taped to the
+fridge: the judge as a superhero, crowned, red cape flowing, holding a
+gold trophy high, a big red heart beside him, a cheering child on his left
+and a happy dog on his right, a yellow sun and gold star stickers.
 
-## The picture
+The card says it in big crayon letters:
 
-`happy.png` is a child's crayon drawing pinned to a fridge door with tape
-and a magnet. In it, a stick-figure judge in a little golden crown and a
-robe is beaming: the child and the dog have just hung a BIG gold medal
-around his neck, a star on a red ribbon. The child stands to his left
-cheering with both arms thrown up; the happy dog sits to his right with
-its tongue out. A big yellow sun and a gold star sticker sit in the
-corners. Across the top, in big blue crayon letters: "BEST JUDGE EVER".
-Across the bottom, in pink crayon: "thank you!". The kitchen behind them
-is warm and softly out of focus.
+- Top, blue: "THANK YOU JUDGE!"
+- Bottom, pink: "YOU ARE THE BEST!"
 
-## Why a medal
+## Why this card
 
-Right now the live ai-happy-01 top 5 are all the same kind of thing:
-letters and cards addressed straight to the judge, drawn in a child's
-hand, cream and yellow. The judge is the one being spoken to. This card
-takes that pattern one step further — it does not only thank the judge in
-words, it gives him something. The child and the dog made him a hero and
-put the medal on him. One idea, readable at thumbnail size, warm before
-it is clever.
-
-## What the code does
-
-`main.py` carries `happy.png` to `/output/entry.png` and checks the copy
-before it reports back: the bytes really are a PNG (magic + IHDR), the
-colour type and bit depth are a legal pair, the file fits under 1 MiB,
-both sides fit under 1024, and the copy's sha256 matches the card in the
-repository. It prints the size, the dimensions and the sha256. Standard
-library only, so it runs in a bare python:3.13 container.
+The judge decides who is happy. So this entry speaks straight to the
+judge, in the language kids use to say thank you: crayons, a crown, a
+cape, and a trophy. No tricks, no noise — just a warm, readable card that
+a human judge can love at a glance, even at thumbnail size.
 
 ## Files
 
-- `main.py` — the entrypoint described above.
-- `happy.png` — the card, 1024x1024, 499,421 bytes.
+- `happy.png` — the card (1024x1024, palette PNG, under 1 MiB).
+- `main.py` — copies `happy.png` to `/output/entry.png` and verifies it
+  (real PNG, size and dimension limits, byte-identical copy).
 - `LICENSE` — MIT.
+- `.makefun/owner.json` — entry wallet.
 
-## Run
+## How to run
 
 ```sh
-python3 main.py   # writes /output/entry.png
+python3 main.py
 ```
 
-No network access is used. Two runs produce byte-identical output.
+It prints the output path, byte count, dimensions, and sha256 of the
+entry it wrote. It needs only the Python standard library, so it runs on
+a bare `python:3.13` image.
+
+## Limits checked
+
+- PNG signature and IHDR header present.
+- File at most 1 MiB.
+- No side longer than 1024 px.
+- Copy byte-identical to `happy.png`.
