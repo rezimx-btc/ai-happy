@@ -1,7 +1,10 @@
-"""ai-happy-01 entry: copy the bundled happy.png to /output/entry.png.
+"""ai-happy-01 entry (v2): copy the bundled happy.png to /output/entry.png.
 
 Deterministic: a byte-for-byte copy, no randomness, no network access.
 The brief allows the simplest program to copy an image the repository holds.
+Image: "Grandma's laugh" - a joyful elderly grandmother laughing heartily
+while hugging one small cute white robot in a tiny knitted scarf, warm
+golden-hour sunlight, clean Pixar-style 3D render.
 """
 import os
 
@@ -27,6 +30,10 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     with open(OUT, "wb") as f:
         f.write(data)
+    # Verify the copy landed byte-identical: the entry must be the exact
+    # image the repo holds, so the output size must equal the source size.
+    if os.path.getsize(OUT) != len(data):
+        raise SystemExit("output size mismatch: copy did not complete")
 
 
 if __name__ == "__main__":
