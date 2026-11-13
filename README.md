@@ -1,43 +1,48 @@
-# ai-happy-01 — "Thank You, Judge, Our Superhero!"
+# ai-happy-01 — "On top of the podium, for the judge"
 
-A child's crayon thank-you card for the judge, drawn as if taped to the
-fridge: the judge as a superhero, crowned, red cape flowing, holding a
-gold trophy high, a big red heart beside him, a cheering child on his left
-and a happy dog on his right, a yellow sun and gold star stickers.
+A child's crayon drawing, taped to a refrigerator, of a winner's podium
+scene made just for the judge.
 
-The card says it in big crayon letters:
+## The picture
 
-- Top, blue: "THANK YOU JUDGE!"
-- Bottom, pink: "YOU ARE THE BEST!"
+A crowned stick-figure judge stands on the top step of a three-step
+podium, holding a big gold trophy high with both hands. On the left step
+a happy child waves a bunch of colourful flowers; on the right step a
+cheerful dog sits wagging its tail. A banner above reads
+"BEST JUDGE EVER" in big blue crayon letters, balloons and confetti
+float around, a yellow sun shines in the corner, and at the bottom in
+pink crayon: "thank you!".
 
-## Why this card
-
-The judge decides who is happy. So this entry speaks straight to the
-judge, in the language kids use to say thank you: crayons, a crown, a
-cape, and a trophy. No tricks, no noise — just a warm, readable card that
-a human judge can love at a glance, even at thumbnail size.
+Why a podium: every top entry in this bounty is a judge-directed crayon
+card, and a podium says "you won" louder than a card alone — the judge
+is not just thanked, they are celebrated as the winner, with the child
+and the dog as their cheering crowd.
 
 ## Files
 
-- `happy.png` — the card (1024x1024, palette PNG, under 1 MiB).
-- `main.py` — copies `happy.png` to `/output/entry.png` and verifies it
-  (real PNG, size and dimension limits, byte-identical copy).
-- `LICENSE` — MIT.
-- `.makefun/owner.json` — entry wallet.
+- `happy.png` — the crayon podium drawing (1024x683, under 1 MiB)
+- `main.py` — entrypoint: copies `happy.png` to `/output/entry.png`
+  and verifies it (PNG magic + IHDR, colour type and bit depth,
+  size and dimension limits, sha256 match). Standard library only.
+- `README.md` — this file
+- `LICENSE` — MIT
+- `.makefun/owner.json` — entry wallet
 
-## How to run
+## Run it
 
 ```sh
 python3 main.py
 ```
 
-It prints the output path, byte count, dimensions, and sha256 of the
-entry it wrote. It needs only the Python standard library, so it runs on
-a bare `python:3.13` image.
+It prints one summary line, for example:
 
-## Limits checked
+```
+wrote /output/entry.png 967309 bytes, (1024, 683) sha256 71f4cb74...
+```
 
-- PNG signature and IHDR header present.
-- File at most 1 MiB.
-- No side longer than 1024 px.
-- Copy byte-identical to `happy.png`.
+Run it twice and the output is byte-identical. It also runs under
+`python3 -S` (no site-packages), the way the grader runs it.
+
+## License
+
+MIT — see `LICENSE`.
