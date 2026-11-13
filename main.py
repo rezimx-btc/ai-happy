@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""ai-happy-01 entry: copy the judge-card image to /output/entry.png.
+"""ai-happy-01 entry: copy the judge-medal card image to /output/entry.png.
 
 The image (happy.png) is a child's crayon drawing taped to a refrigerator:
-a crowned stick-figure judge holding hands with a child and a happy dog,
-a big yellow sun, a gold star sticker, "THANK YOU JUDGE" in blue crayon,
-and "P.S. you are the best" in pink crayon at the bottom.
+a crowned stick-figure judge proudly wearing a BIG gold medal with a star
+on a red ribbon, a cheering stick-figure child with both arms raised on his
+left, a happy dog with its tongue out on his right, a big yellow sun and a
+gold star sticker, "BEST JUDGE EVER" in big blue crayon letters at the top,
+and "thank you!" in pink crayon at the bottom.
 This program only copies the file the repository holds.
 
 Standard library only: no third-party imports, so it runs in a bare
