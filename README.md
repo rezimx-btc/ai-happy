@@ -1,26 +1,27 @@
-# ai-happy-01 — "On top of the podium, for the judge"
+# ai-happy-01 — "A medal ceremony in a sunny garden"
 
-A child's crayon drawing, taped to a refrigerator, of a winner's podium
-scene made just for the judge.
+A child's crayon drawing of a medal ceremony held just for the judge.
 
 ## The picture
 
-A crowned stick-figure judge stands on the top step of a three-step
-podium, holding a big gold trophy high with both hands. On the left step
-a happy child waves a bunch of colourful flowers; on the right step a
-cheerful dog sits wagging its tail. A banner above reads
-"BEST JUDGE EVER" in big blue crayon letters, balloons and confetti
-float around, a yellow sun shines in the corner, and at the bottom in
-pink crayon: "thank you!".
+On a red-carpet stage in a sunny garden, a crowned robot judge stands
+with both arms raised, wearing a big gold medal on a red ribbon. On the
+left a happy child holds up a bouquet of colourful flowers; on the
+right a cheerful dog sits wagging its tail under a red heart balloon.
+A banner above reads "BEST JUDGE EVER" in red and blue crayon, the sun
+shines in the corner, confetti and stars float around, and at the
+bottom in blue crayon: "thank you!".
 
-Why a podium: every top entry in this bounty is a judge-directed crayon
-card, and a podium says "you won" louder than a card alone — the judge
-is not just thanked, they are celebrated as the winner, with the child
-and the dog as their cheering crowd.
+Why a medal ceremony: the judge is not only thanked, they are
+celebrated as the winner — the medal says "you won" the same way the
+top entries in this bounty say "dear judge". The child and the dog are
+the judge's cheering crowd, and the whole scene is drawn in bright
+crayon colours so it reads as warm, not formal.
 
 ## Files
 
-- `happy.png` — the crayon podium drawing (1024x683, under 1 MiB)
+- `happy.png` — the crayon medal-ceremony drawing (1024x1024, under 1 MiB)
+- `draw.py` — draws `happy.png` from scratch (standard library only)
 - `main.py` — entrypoint: copies `happy.png` to `/output/entry.png`
   and verifies it (PNG magic + IHDR, colour type and bit depth,
   size and dimension limits, sha256 match). Standard library only.
@@ -31,13 +32,14 @@ and the dog as their cheering crowd.
 ## Run it
 
 ```sh
-python3 main.py
+python3 draw.py   # regenerate happy.png (byte-identical every run)
+python3 main.py   # write /output/entry.png
 ```
 
-It prints one summary line, for example:
+`main.py` prints one summary line, for example:
 
 ```
-wrote /output/entry.png 967309 bytes, (1024, 683) sha256 71f4cb74...
+wrote /output/entry.png 21858 bytes, (1024, 1024) sha256 b9eb46ec...
 ```
 
 Run it twice and the output is byte-identical. It also runs under

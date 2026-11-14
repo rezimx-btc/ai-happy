@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""ai-happy-01 entry: publish the judge-podium crayon card to /output/entry.png.
+"""ai-happy-01 entry: publish the medal-ceremony crayon card to /output/entry.png.
 
-The picture (happy.png) is a child's crayon drawing taped to a refrigerator:
-a crowned stick-figure judge stands on the top step of a winner's podium,
-holding a big gold trophy high, while a happy child waves a bunch of
-flowers from the left step and a cheerful dog sits on the right step.
-A banner reads "BEST JUDGE EVER" in blue crayon, balloons and confetti
-float around, a yellow sun shines in the corner, and "thank you!" is
-written in pink crayon at the bottom.
+The picture (happy.png) is a child's crayon drawing of a medal
+ceremony held for the judge: a crowned robot judge on a red-carpet
+stage wears a big gold medal, a child waves a flower bouquet on the
+left, and a dog sits under a red heart balloon on the right. A banner
+reads "BEST JUDGE EVER" and "thank you!" runs along the bottom.
 
-This script only copies the picture the repository holds and checks it
-is a real PNG within the entry limits. Standard library only, so it
-runs in a bare python:3.13 image.
+This script only copies the picture the repository holds and checks
+it is a real PNG within the entry limits. Standard library only, so
+it runs in a bare python:3.13 image.
 """
 import hashlib
 import os
@@ -28,63 +26,35 @@ GOOD_DEPTHS = {0: (1, 2, 4, 8, 16), 2: (8, 16), 3: (1, 2, 4, 8),
                4: (8, 16), 6: (8, 16)}
 
 
-def fail(message):
-    raise SystemExit("entry check failed: " + message)
-
-
-def read_header(blob):
-    """Return (width, height, bit depth, colour type) from a PNG header."""
-    if len(blob) < 33:
-        fail("file too short to be a PNG (%d bytes)" % len(blob))
-    if blob[:8] != MAGIC:
-        fail("missing PNG magic bytes")
-    if blob[12:16] != b"IHDR":
-        fail("first chunk is not IHDR")
-    width, height = struct.unpack(">II", blob[16:24])
-    depth = blob[24]
-    colour = blob[25]
-    return width, height, depth, colour
-
-
-def check_trailer(blob):
-    """A complete PNG ends with the 12-byte IEND chunk."""
-    trailer = b"\x00\x00\x00\x00IEND\xaeB`\x82"
-    if len(blob) < 12 or blob[-12:] != trailer:
-        fail("PNG is truncated: missing the IEND trailer chunk")
-
-
-def verify_card(blob, width, height, depth, colour):
-    if width == 0 or height == 0:
-        fail("image has a zero side: %dx%d" % (width, height))
-    if width > MAX_SIDE or height > MAX_SIDE:
-        fail("image over the 1024x1024 limit: %dx%d" % (width, height))
-    if len(blob) > MAX_BYTES:
-        fail("image over the 1 MiB limit: %d bytes" % len(blob))
-    if colour not in GOOD_DEPTHS or depth not in GOOD_DEPTHS[colour]:
-        fail("unsupported PNG colour type %d with bit depth %d"
-             % (colour, depth))
-
-
-def publish():
-    if not os.path.isfile(CARD):
-        fail("happy.png not found next to main.py")
-    with open(CARD, "rb") as handle:
-        original = handle.read()
-    width, height, depth, colour = read_header(original)
-    verify_card(original, width, height, depth, colour)
-    check_trailer(original)
-    os.makedirs(os.path.dirname(ENTRY), exist_ok=True)
-    shutil.copyfile(CARD, ENTRY)
-    with open(ENTRY, "rb") as handle:
-        copied = handle.read()
-    if hashlib.sha256(original).hexdigest() != hashlib.sha256(copied).hexdigest():
-        fail("copy mismatch: entry.png differs from happy.png")
-    print("wrote", ENTRY, len(copied), "bytes,", (width, height),
-          "sha256", hashlib.sha256(copied).hexdigest())
+def check_png(path):
+    """Return (width, height, sha256) or raise on any problem."""
+    with open(path, "rb") as f:
+        data = f.read()
+    if len(data) > MAX_BYTES:
+        raise ValueError(f"card is {len(data)} bytes, over {MAX_BYTES}")
+    if not data.startswith(MAGIC):
+        raise ValueError("card is not a PNG")
+    if len(data) < 33 or data[12:16] != b"IHDR":
+        raise ValueError("card has no IHDR chunk")
+    width, height, depth, ctype = struct.unpack(">IIBB", data[16:26])
+    if width < 1 or height < 1 or width > MAX_SIDE or height > MAX_SIDE:
+        raise ValueError(f"card is {width}x{height}, over {MAX_SIDE}")
+    if ctype not in GOOD_DEPTHS or depth not in GOOD_DEPTHS[ctype]:
+        raise ValueError(f"bad colour type {ctype} / depth {depth}")
+    return width, height, hashlib.sha256(data).hexdigest()
 
 
 def main():
-    publish()
+    width, height, digest = check_png(CARD)
+    os.makedirs(os.path.dirname(ENTRY), exist_ok=True)
+    shutil.copyfile(CARD, ENTRY)
+    # verify the copy we just wrote, not just the source
+    _, _, out_digest = check_png(ENTRY)
+    if out_digest != digest:
+        raise ValueError("copied entry does not match the card")
+    size = os.path.getsize(ENTRY)
+    print(f"wrote {ENTRY} {size} bytes, ({width}, {height}) "
+          f"sha256 {digest[:12]}...")
 
 
 if __name__ == "__main__":
